@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>decide.js test</title>
+<style>
+  body { font-family: monospace; max-width: 640px; margin: 40px auto; padding: 0 16px; }
+  textarea { width: 100%; height: 100px; font-family: inherit; font-size: 14px; }
+  button { margin-top: 8px; padding: 8px 16px; font-family: inherit; cursor: pointer; }
+  pre { background: #f0f0f0; padding: 12px; white-space: pre-wrap; word-break: break-word; }
+</style>
+</head>
+<body>
+  <h1>/api/decide test</h1>
+  <textarea id="text" placeholder="Type something...">I can't believe this happened, this is amazing!</textarea>
+  <br />
+  <button id="send">Send</button>
+  <pre id="output">Response will appear here.</pre>
+
+  <script>
+    const textEl = document.getElementById('text');
+    const outputEl = document.getElementById('output');
+    const sendEl = document.getElementById('send');
+
+    sendEl.addEventListener('click', async () => {
+      const text = textEl.value;
+      sendEl.disabled = true;
+      outputEl.textContent = 'Loading...';
+
+      const started = performance.now();
+      try {
+        const res = await fetch('/api/decide', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text }),
+        });
+        const data = await res.json();
+        const roundTrip = Math.round(performance.now() - started);
+        outputEl.textContent = `HTTP ${res.status} · round-trip ${roundTrip}ms\n\n${JSON.stringify(data, null, 2)}`;
+      } catch (err) {
+        outputEl.textContent = `Request failed: ${err.message}`;
+      } finally {
+        sendEl.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

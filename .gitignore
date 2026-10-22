@@ -3,3 +3,5 @@
 .env.*.local
 .doc
 .DS_Store
+.vercel
+.env*
