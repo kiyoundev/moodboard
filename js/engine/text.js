@@ -27,7 +27,8 @@ const textarea = $('textarea');
  * @property {number} t - timestamp this char was created
  * @property {number|null} x - screen x position, null until draw.js lays it out
  * @property {number|null} y - screen y position, null until draw.js lays it out
- * @property {number} s - scale multiplier
+ * @property {number} s - scale multiplier; draw.js overwrites this with the rendered pixel size
+ * @property {number} [col] - per-render redness (0-1), written by draw.js once this char is drawn
  */
 
 /** @type {CharObject[]} */
@@ -93,4 +94,14 @@ export function focusTA() {
 // future frame loop's job (#3.6/#3.8), not this module's
 export function bumpShake(amount) {
   shake = Math.max(shake, amount);
+}
+
+// current screen-shake amount, for draw.js to read each frame
+export function getShake() {
+  return shake;
+}
+
+// live ghosts array, for draw.js to render — read-only for callers
+export function getGhosts() {
+  return ghosts;
 }
