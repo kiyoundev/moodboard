@@ -14,6 +14,7 @@ const GHOST_INITIAL_LIFE = 1;
 const GHOST_UPWARD_SPEED = 60;     // random initial upward kick when a character is deleted
 const GHOST_SIDEWAYS_SPEED = 80;   // random sideways spread range
 const NEW_CHAR_FORCE_SCALE = 0.6;  // a brand-new character's guessed force, before onForce corrects it
+const SHAKE_DECAY_RATE = 0.004;
 
 const $ = (id) => document.getElementById(id);
 const textarea = $('textarea');
@@ -99,6 +100,11 @@ export function bumpShake(amount) {
 // current screen-shake amount, for draw.js to read each frame
 export function getShake() {
   return shake;
+}
+
+// decays the screen-shake amount toward zero — index.js calls this once per frame
+export function decayShake(dt) {
+  shake *= Math.pow(SHAKE_DECAY_RATE, dt);
 }
 
 // live ghosts array, for draw.js to render — read-only for callers
