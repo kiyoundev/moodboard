@@ -56,6 +56,9 @@ const panel = $('panel');
 const pctx = panel.getContext('2d');
 const textarea = $('textarea');
 
+panel.width = PW;
+panel.height = PH;
+
 const WCACHE = new Map();
 
 let time = 0;

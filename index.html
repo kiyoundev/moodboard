@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#efeeea">
+<title>moodboard</title>
+<style>
+:root{--bg:#efeeea;--ink:#151515;--mute:#8b8a86;--line:rgba(0,0,0,.1);--red:#e2231a;--card:rgba(250,250,248,.94);
+  --safe-t:env(safe-area-inset-top,0px);--safe-b:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);overscroll-behavior:none}
+body{font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue","Apple SD Gothic Neo","Noto Sans KR",sans-serif;color:var(--ink);
+  -webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+#bar{position:fixed;top:calc(var(--safe-t) + 24px);left:14px;right:14px;display:flex;justify-content:space-between;z-index:10;pointer-events:none}
+.grp{display:flex;gap:6px;pointer-events:auto}
+.btn{height:32px;padding:0 13px;border-radius:16px;background:transparent;color:var(--ink);border:1px solid rgba(0,0,0,.18);
+  font:inherit;font-size:12px;letter-spacing:.04em;display:flex;align-items:center;gap:6px;cursor:pointer}
+.btn.on{background:var(--ink);color:#f4f3f0;border-color:var(--ink)}
+.dot{width:6px;height:6px;border-radius:50%;background:#bbb;transition:background .2s,transform .08s}
+.dot.live{background:var(--red)}
+#scene{position:fixed;left:50%;transform:translateX(-50%);overflow:hidden}
+#panel{display:block;width:100%;height:100%}
+#meter{position:fixed;left:50%;transform:translateX(-50%);z-index:5;font-size:10.5px;letter-spacing:.09em;color:var(--ink);
+  display:flex;flex-direction:column;gap:7px}
+#meter .row{display:flex;justify-content:space-between;gap:16px;white-space:nowrap}
+#meter .k{color:var(--mute)}
+#meter #state{font-weight:700;letter-spacing:.14em;transition:color .3s}
+#track{height:2px;background:rgba(0,0,0,.1);position:relative;overflow:hidden}
+#fill{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--ink)}
+#hit{position:absolute;top:-3px;width:2px;height:8px;background:var(--red);opacity:0;left:0}
+#textarea{position:fixed;left:-9999px;top:0;width:10px;height:10px;opacity:0;font-size:16px}
+/* settings card */
+#sheet{position:fixed;right:14px;top:calc(var(--safe-t) + 66px);width:min(300px,calc(100vw - 28px));z-index:20;background:var(--card);
+  border:1px solid var(--line);border-radius:14px;padding:16px 16px 12px;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  box-shadow:0 12px 40px rgba(0,0,0,.08);display:none}
+#sheet.show{display:block}
+#sheet h3{margin:0 0 12px;font-size:11px;letter-spacing:.14em;font-weight:700}
+.sl{margin:0 0 13px}
+.sl .t{display:flex;justify-content:space-between;font-size:11.5px;margin-bottom:6px}
+.sl .t span:last-child{color:var(--mute);font-variant-numeric:tabular-nums}
+.sl small{display:block;color:var(--mute);font-size:10.5px;margin-top:4px;line-height:1.4}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:18px;background:transparent;margin:0}
+input[type=range]::-webkit-slider-runnable-track{height:2px;background:rgba(0,0,0,.18)}
+input[type=range]::-moz-range-track{height:2px;background:rgba(0,0,0,.18)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--ink);margin-top:-6px;border:none}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--ink);border:none}
+.row2{display:flex;gap:6px;margin-top:4px}
+.row2 .btn{flex:1;justify-content:center;font-size:11px;height:30px}
+/* start card */
+#start{position:fixed;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;background:rgba(239,238,234,.72);
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);transition:opacity .4s}
+#start .c{width:min(330px,calc(100vw - 40px));background:#fafaf8;border:1px solid var(--line);border-radius:16px;padding:24px 22px 18px;box-shadow:0 20px 60px rgba(0,0,0,.08)}
+#start h1{margin:0 0 10px;font-size:22px;letter-spacing:-.02em;font-weight:800;line-height:1.15}
+#start p{margin:0 0 18px;font-size:12.5px;line-height:1.65;color:#55544f}
+#start .b1{width:100%;height:42px;border-radius:21px;border:none;background:var(--ink);color:#f4f3f0;font:inherit;font-size:13px;letter-spacing:.04em;cursor:pointer}
+#start .b2{width:100%;height:36px;margin-top:6px;border:none;background:none;color:var(--mute);font:inherit;font-size:12px;cursor:pointer}
+#toast{position:fixed;left:50%;top:calc(var(--safe-t) + 70px);transform:translateX(-50%);background:var(--ink);color:#f4f3f0;
+  padding:8px 14px;border-radius:16px;font-size:12px;opacity:0;transition:opacity .4s;z-index:40;pointer-events:none;white-space:nowrap}
+</style>
+</head>
+<body>
+<div id="bar">
+  <div class="grp"><button class="btn" id="micBtn"><i class="dot" id="dot"></i><span id="micTxt">Mic</span></button></div>
+  <div class="grp"><button class="btn" id="setBtn">Settings</button><button class="btn" id="saveBtn">Save</button></div>
+</div>
+<div id="scene"><canvas id="panel"></canvas></div>
+<div id="meter">
+  <div class="row"><span id="state">calm</span><span><span class="k">force </span><span id="mF">—</span><span class="k">　speed </span><span id="mS">0.0</span><span class="k">/s</span></span></div>
+  <div id="track"><div id="fill"></div><div id="hit"></div></div>
+</div>
+<textarea id="textarea" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" maxlength="220"></textarea>
+<div id="sheet">
+  <h3>Settings</h3>
+  <div class="sl"><div class="t"><span>Text size</span><span id="vZ">×1.0</span></div><input type="range" id="sZ" min="0.45" max="1.6" step="0.05" value="1">
+    <small>Base size when calm · grows larger as you get more intense</small></div>
+  <div class="sl"><div class="t"><span>Overall sensitivity</span><span id="vM">×1.0</span></div><input type="range" id="sM" min="0.4" max="2.5" step="0.05" value="1">
+    <small>Higher means even a light touch reads as red and big</small></div>
+  <div class="sl"><div class="t"><span>Mic weight</span><span id="vF">70%</span></div><input type="range" id="sF" min="0" max="1" step="0.05" value="0.7"></div>
+  <div class="sl"><div class="t"><span>Speed weight</span><span id="vS">50%</span></div><input type="range" id="sS" min="0" max="1" step="0.05" value="0.5"></div>
+  <div class="sl"><div class="t"><span>Decay rate</span><span id="vD">normal</span></div><input type="range" id="sD" min="0.3" max="3" step="0.05" value="1">
+    <small>How fast it fades back to black ink once you stop</small></div>
+  <div class="row2"><button class="btn" id="calBtn">Recalibrate</button><button class="btn" id="clrBtn">New board</button></div>
+</div>
+<div id="start"><div class="c">
+  <h1>Type how<br>you feel.</h1>
+  <p>Reads the <b>loudness</b> of your typing, plus its <b>speed, rhythm, and deletions</b>, to grow and redden the text. Sound is only analyzed in this browser — never recorded.</p>
+  <button class="b1" id="goMic">Listen with mic</button>
+  <button class="b2" id="goNo">Without mic (speed/rhythm only)</button>
+</div></div>
+<div id="toast"></div>
+<script type="module" src="js/engine/index.js"></script>
+</body>
+</html>

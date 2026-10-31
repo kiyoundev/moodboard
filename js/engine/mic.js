@@ -61,7 +61,7 @@ export async function startMic() {
 
 export function setMicUI() {
   $('micBtn').classList.toggle('on', micOn);
-  $('micTxt').textContent = micOn ? '듣는 중' : '마이크';
+  $('micTxt').textContent = micOn ? 'Listening' : 'Mic';
   $('dot').classList.toggle('live', micOn);
 }
 

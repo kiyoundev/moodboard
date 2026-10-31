@@ -44,6 +44,37 @@ scene.addEventListener('pointerdown', (e) => {
   $('setBtn').classList.remove('on');
 });
 
+const SIDE_MARGIN_PX = 24;
+const TOP_MARGIN_PX = 72;    // clears #bar
+const BOTTOM_MARGIN_PX = 74;
+const METER_GAP_PX = 16;
+const METER_MAX_WIDTH_PX = 340;
+
+// sizes/positions #scene to fit the panel's fixed aspect ratio into the
+// viewport (flat canvas — no perspective warp), and lines up #meter below it
+function layout() {
+  const safeTop = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--safe-t')) || 0;
+  const top = safeTop + TOP_MARGIN_PX;
+  const availW = innerWidth - SIDE_MARGIN_PX, availH = innerHeight - top - BOTTOM_MARGIN_PX;
+  const scale = Math.min(availW / panel.width, availH / panel.height);
+  const displayW = panel.width * scale, displayH = panel.height * scale;
+  const sceneTop = top + (innerHeight - top - BOTTOM_MARGIN_PX - displayH) / 2;
+
+  scene.style.width = displayW + 'px';
+  scene.style.height = displayH + 'px';
+  scene.style.top = sceneTop + 'px';
+
+  const meterEl = $('meter');
+  meterEl.style.top = (sceneTop + displayH + METER_GAP_PX) + 'px';
+  meterEl.style.width = Math.min(displayW, METER_MAX_WIDTH_PX) + 'px';
+}
+
+let resizeTimer = null;
+addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(layout, 80);
+});
+
 let last = performance.now(), uiT = 0;
 
 // per-frame tick: samples mic/keystroke signals into mood, advances the
@@ -117,4 +148,5 @@ if (savedText) {
   for (const c of chars) c.pop = 0;
 }
 
+layout();
 requestAnimationFrame(frame);
