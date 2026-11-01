@@ -34,14 +34,19 @@ const FIT_RECOMPUTE_INTERVAL_S = 0.12; // how often fitSize() (an O(n) scan) get
 const PLACEHOLDER_BG_COLOR = '#dcdcda';          // flat fallback background (no photo compositing yet)
 const REDNESS_LOW = 0.32, REDNESS_HIGH = 0.78;   // store.energy range mapped onto the ink→red color shift
 const PLACEHOLDER_LINES = ['Type how', 'you feel.'];
-const PLACEHOLDER_FONT_SIZE = 112;
-const PLACEHOLDER_LINE_TOP = 104, PLACEHOLDER_LINE_GAP = 118;
+// The original rendered this panel warped onto a small homography quad
+// within an already screen-fitted photo (effective scale ~0.23-0.3 panel
+// units per px); our flat layout fills the viewport directly (~0.37-0.57),
+// so these font-related constants are scaled ~0.6x from the original's
+// values to land at a comparable on-screen size without a quad to shrink it.
+const PLACEHOLDER_FONT_SIZE = 67;
+const PLACEHOLDER_LINE_TOP = 62, PLACEHOLDER_LINE_GAP = 71;
 const PLACEHOLDER_CARET_BLINK_HZ = 1.6;
-const PLACEHOLDER_CARET_WIDTH = 12, PLACEHOLDER_CARET_HEIGHT = 96;
+const PLACEHOLDER_CARET_WIDTH = 7, PLACEHOLDER_CARET_HEIGHT = 58;
 const TEXT_CARET_BLINK_HZ = 1.7;
-const MIN_LAST_LINE_HEIGHT = 30; // keep porting into frame budget for the last visible line
+const MIN_LAST_LINE_HEIGHT = 18; // keep porting into frame budget for the last visible line
 
-const FIT_SIZE_MAX = 270, FIT_SIZE_MIN = 92, FIT_SIZE_STEP = 6; // search range/step for the "fits without overflow" size
+const FIT_SIZE_MAX = PLACEHOLDER_FONT_SIZE, FIT_SIZE_MIN = 55, FIT_SIZE_STEP = 4; // capped at the placeholder's size so typed text starts at the same size shown before typing, not bigger
 const FIT_MARGIN_RIGHT = 8, FIT_MARGIN_BOTTOM = 40;
 
 const ANNOT_FONT_SIZE = 17;
@@ -62,7 +67,7 @@ panel.height = PH;
 const WCACHE = new Map();
 
 let time = 0;
-let FIT = 150, FITt = 150, fitAcc = 1;
+let FIT = PLACEHOLDER_FONT_SIZE, FITt = PLACEHOLDER_FONT_SIZE, fitAcc = 1; // 150 in the original — now starts at the placeholder's size, see note above
 
 // cached width (in em, per 1px font size) of a single character, measured
 // once at a large fixed size for stability
