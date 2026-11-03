@@ -6,6 +6,20 @@ const SETTINGS_DEFAULTS = {
   decayRate: 1,
 };
 
+// jev.js's resetContent() restores this same shape, so it and the store's
+// initial value share one source of truth instead of two copies
+export const MOOD_CONTENT_DEFAULTS = {
+  emotion: 'neutral',
+  intensity: 0,
+  emotionConfidence: null,
+  intensityConfidence: null,
+  emotionProbs: null,
+  intensityProbs: null,
+  latency: null,
+  tokens: null,
+  raw: null,
+};
+
 // localStorage helper
 export const persist = {
   get(k) { 
@@ -34,14 +48,7 @@ export const store = {
   },
   energy: 0,
   mood: {
-    content: {
-      emotion: 'neutral',
-      intensity: 0,
-      probs: null,
-      confidence: null,
-      latency: null,
-      tokens: null,
-    },
+    content: { ...MOOD_CONTENT_DEFAULTS },
     requests: 0,
     failures: 0,
   },

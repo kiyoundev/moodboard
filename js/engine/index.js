@@ -14,6 +14,7 @@ import { readMood, moodName, getFs, getSs } from './mood.js';
 import { onInput, isUI, focusTA, chars, getGhosts, decayShake } from './text.js';
 import { tick, drawPanel, getFitDebug } from './draw.js';
 import { bindSlider, bindButtons, bindStartCard } from './ui.js';
+import { onContentInput } from '../jev.js';
 
 const CHAR_POP_DECAY_RATE = 0.02;
 const GHOST_FADE_RATE = 1.8;       // life lost per second
@@ -30,6 +31,7 @@ const pctx = panel.getContext('2d');
 const ARROW_AND_HOME_END_KEYS = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'];
 
 textarea.addEventListener('input', onInput);
+textarea.addEventListener('input', onContentInput); // runs after onInput so chars[] reflects the just-typed char
 textarea.addEventListener('keydown', (e) => {
   if (ARROW_AND_HOME_END_KEYS.includes(e.key)) e.preventDefault();
   onKey(e);

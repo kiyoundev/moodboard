@@ -6,3 +6,4 @@
 .vercel
 .env*
 .issues
+.plan

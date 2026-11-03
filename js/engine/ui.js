@@ -9,6 +9,7 @@
 import { persist, store } from '../store.js';
 import { resetCalibration, startMic, isMicOn } from './mic.js';
 import { chars, focusTA } from './text.js';
+import { resetContent } from '../jev.js';
 
 const TOAST_DURATION_MS = 2800;
 const START_CARD_FADE_MS = 400;
@@ -53,6 +54,7 @@ export function bindButtons() {
     chars.length = 0;
     persist.set('moodboard.text', '');
     store.energy = 0;
+    resetContent();
     focusTA();
   };
 
