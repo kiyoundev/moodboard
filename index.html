@@ -5,64 +5,17 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="theme-color" content="#efeeea">
 <title>moodboard</title>
-<style>
-:root{--bg:#efeeea;--ink:#151515;--mute:#8b8a86;--line:rgba(0,0,0,.1);--red:#e2231a;--card:rgba(250,250,248,.94);
-  --safe-t:env(safe-area-inset-top,0px);--safe-b:env(safe-area-inset-bottom,0px)}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);overscroll-behavior:none}
-body{font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue","Apple SD Gothic Neo","Noto Sans KR",sans-serif;color:var(--ink);
-  -webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
-#bar{position:fixed;top:calc(var(--safe-t) + 24px);left:14px;right:14px;display:flex;justify-content:space-between;z-index:10;pointer-events:none}
-.grp{display:flex;gap:6px;pointer-events:auto}
-.btn{height:32px;padding:0 13px;border-radius:16px;background:transparent;color:var(--ink);border:1px solid rgba(0,0,0,.18);
-  font:inherit;font-size:12px;letter-spacing:.04em;display:flex;align-items:center;gap:6px;cursor:pointer}
-.btn.on{background:var(--ink);color:#f4f3f0;border-color:var(--ink)}
-.dot{width:6px;height:6px;border-radius:50%;background:#bbb;transition:background .2s,transform .08s}
-.dot.live{background:var(--red)}
-#scene{position:fixed;left:50%;transform:translateX(-50%);overflow:hidden}
-#panel{display:block;width:100%;height:100%}
-#meter{position:fixed;left:50%;transform:translateX(-50%);z-index:5;font-size:10.5px;letter-spacing:.09em;color:var(--ink);
-  display:flex;flex-direction:column;gap:7px}
-#meter .row{display:flex;justify-content:space-between;gap:16px;white-space:nowrap}
-#meter .k{color:var(--mute)}
-#meter #state{font-weight:700;letter-spacing:.14em;transition:color .3s}
-#track{height:2px;background:rgba(0,0,0,.1);position:relative;overflow:hidden}
-#fill{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--ink)}
-#hit{position:absolute;top:-3px;width:2px;height:8px;background:var(--red);opacity:0;left:0}
-#textarea{position:fixed;left:-9999px;top:0;width:10px;height:10px;opacity:0;font-size:16px}
-/* settings card */
-#sheet{position:fixed;right:14px;top:calc(var(--safe-t) + 66px);width:min(300px,calc(100vw - 28px));z-index:20;background:var(--card);
-  border:1px solid var(--line);border-radius:14px;padding:16px 16px 12px;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
-  box-shadow:0 12px 40px rgba(0,0,0,.08);display:none}
-#sheet.show{display:block}
-#sheet h3{margin:0 0 12px;font-size:11px;letter-spacing:.14em;font-weight:700}
-.sl{margin:0 0 13px}
-.sl .t{display:flex;justify-content:space-between;font-size:11.5px;margin-bottom:6px}
-.sl .t span:last-child{color:var(--mute);font-variant-numeric:tabular-nums}
-.sl small{display:block;color:var(--mute);font-size:10.5px;margin-top:4px;line-height:1.4}
-input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:18px;background:transparent;margin:0}
-input[type=range]::-webkit-slider-runnable-track{height:2px;background:rgba(0,0,0,.18)}
-input[type=range]::-moz-range-track{height:2px;background:rgba(0,0,0,.18)}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--ink);margin-top:-6px;border:none}
-input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--ink);border:none}
-.row2{display:flex;gap:6px;margin-top:4px}
-.row2 .btn{flex:1;justify-content:center;font-size:11px;height:30px}
-/* start card */
-#start{position:fixed;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;background:rgba(239,238,234,.72);
-  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);transition:opacity .4s}
-#start .c{width:min(330px,calc(100vw - 40px));background:#fafaf8;border:1px solid var(--line);border-radius:16px;padding:24px 22px 18px;box-shadow:0 20px 60px rgba(0,0,0,.08)}
-#start h1{margin:0 0 10px;font-size:22px;letter-spacing:-.02em;font-weight:800;line-height:1.15}
-#start p{margin:0 0 18px;font-size:12.5px;line-height:1.65;color:#55544f}
-#start .b1{width:100%;height:42px;border-radius:21px;border:none;background:var(--ink);color:#f4f3f0;font:inherit;font-size:13px;letter-spacing:.04em;cursor:pointer}
-#start .b2{width:100%;height:36px;margin-top:6px;border:none;background:none;color:var(--mute);font:inherit;font-size:12px;cursor:pointer}
-#toast{position:fixed;left:50%;top:calc(var(--safe-t) + 70px);transform:translateX(-50%);background:var(--ink);color:#f4f3f0;
-  padding:8px 14px;border-radius:16px;font-size:12px;opacity:0;transition:opacity .4s;z-index:40;pointer-events:none;white-space:nowrap}
-</style>
+<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+<!-- top menu bar -->
 <div id="bar">
   <div class="grp"><button class="btn" id="micBtn"><i class="dot" id="dot"></i><span id="micTxt">Mic</span></button></div>
-  <div class="grp"><button class="btn" id="setBtn">Settings</button><button class="btn" id="saveBtn">Save</button><button class="btn" id="clrBtn">New board</button></div>
+  <div class="grp">
+    <button class="btn" id="clrBtn">New board</button>
+    <button class="btn" id="statsBtn">Stats</button>
+    <button class="btn" id="setBtn">Settings</button>
+  </div>
 </div>
 <div id="scene"><canvas id="panel"></canvas></div>
 <div id="meter">
@@ -81,6 +34,55 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
   <div class="sl"><div class="t"><span>Decay rate</span><span id="vD">normal</span></div><input type="range" id="sD" min="0.3" max="3" step="0.05" value="1">
     <small>How fast it fades back to black ink once you stop</small></div>
   <div class="row2"><button class="btn" id="calBtn">Recalibrate</button></div>
+</div>
+<!-- right side dev panel -->
+<div id="devpanel">
+  <h3>Dev Stats</h3>
+
+  <div class="dp-section">
+    <div class="dp-head-row"><span class="k">emotion</span><span class="v" id="dpEmotionLabel">—</span></div>
+    <div class="dp-head-row"><span class="k">intensity</span><span class="v" id="dpIntensityVal">—</span></div>
+    <div class="dp-bar"><div class="dp-fill" id="dpIntensityBar"></div></div>
+    <div class="dp-head-row"><span class="k">score (0–4)</span><span class="v" id="dpScoreVal">—</span></div>
+  </div>
+
+  <div class="dp-section">
+    <h3>BEHAVIOR</h3>
+    <div class="dp-head-row"><span class="k" id="dpEnergyState">calm</span><span class="v" id="dpEnergyVal">0.00</span></div>
+    <div class="dp-bar"><div class="dp-fill" id="dpEnergyBar"></div></div>
+  </div>
+
+  <div class="dp-section">
+    <h3>EMOTION.PROBABILITIES</h3>
+    <div class="dp-row" id="dpEpNeutralRow"><span class="dp-label">neutral</span><div class="dp-bar"><div class="dp-fill" id="dpEpNeutralBar"></div></div><span class="dp-val" id="dpEpNeutralVal">—</span></div>
+    <div class="dp-row" id="dpEpHappyRow"><span class="dp-label">happy</span><div class="dp-bar"><div class="dp-fill" id="dpEpHappyBar"></div></div><span class="dp-val" id="dpEpHappyVal">—</span></div>
+    <div class="dp-row" id="dpEpSadRow"><span class="dp-label">sad</span><div class="dp-bar"><div class="dp-fill" id="dpEpSadBar"></div></div><span class="dp-val" id="dpEpSadVal">—</span></div>
+    <div class="dp-row" id="dpEpAngryRow"><span class="dp-label">angry</span><div class="dp-bar"><div class="dp-fill" id="dpEpAngryBar"></div></div><span class="dp-val" id="dpEpAngryVal">—</span></div>
+    <div class="dp-row" id="dpEpFearRow"><span class="dp-label">fear</span><div class="dp-bar"><div class="dp-fill" id="dpEpFearBar"></div></div><span class="dp-val" id="dpEpFearVal">—</span></div>
+  </div>
+
+  <div class="dp-section">
+    <h3>INTENSITY.PROBABILITIES</h3>
+    <div class="dp-row" id="dpIpRow0"><span class="dp-label">0 · none</span><div class="dp-bar"><div class="dp-fill" id="dpIpBar0"></div></div><span class="dp-val" id="dpIpVal0">—</span></div>
+    <div class="dp-row" id="dpIpRow1"><span class="dp-label">1 · weak</span><div class="dp-bar"><div class="dp-fill" id="dpIpBar1"></div></div><span class="dp-val" id="dpIpVal1">—</span></div>
+    <div class="dp-row" id="dpIpRow2"><span class="dp-label">2 · clear</span><div class="dp-bar"><div class="dp-fill" id="dpIpBar2"></div></div><span class="dp-val" id="dpIpVal2">—</span></div>
+    <div class="dp-row" id="dpIpRow3"><span class="dp-label">3 · strong</span><div class="dp-bar"><div class="dp-fill" id="dpIpBar3"></div></div><span class="dp-val" id="dpIpVal3">—</span></div>
+    <div class="dp-row" id="dpIpRow4"><span class="dp-label">4 · overwhelming</span><div class="dp-bar"><div class="dp-fill" id="dpIpBar4"></div></div><span class="dp-val" id="dpIpVal4">—</span></div>
+  </div>
+
+  <div class="dp-section">
+    <h3>META</h3>
+    <div class="dp-meta-row"><span>confidence</span><span><span id="dpConfEmotion">—</span> · <span id="dpConfIntensity">—</span></span></div>
+    <div class="dp-meta-row"><span>latency</span><span id="dpLatency">—</span></div>
+    <div class="dp-meta-row"><span>input tokens</span><span id="dpTokens">—</span></div>
+    <div class="dp-meta-row"><span>requests</span><span id="dpRequests">0</span></div>
+    <div class="dp-meta-row"><span>failures</span><span id="dpFailures">0</span></div>
+  </div>
+
+  <details>
+    <summary>Raw JSON</summary>
+    <pre id="dpRawJson">—</pre>
+  </details>
 </div>
 <div id="start"><div class="c">
   <h1>Type how<br>you feel.</h1>

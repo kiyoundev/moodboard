@@ -15,6 +15,7 @@ import { onInput, isUI, focusTA, chars, getGhosts, decayShake } from './text.js'
 import { tick, drawPanel, getFitDebug } from './draw.js';
 import { bindSlider, bindButtons, bindStartCard } from './ui.js';
 import { onContentInput } from '../jev.js';
+import { toggleDevPanel, updateDevPanel } from '../devpanel.js';
 
 const CHAR_POP_DECAY_RATE = 0.02;
 const GHOST_FADE_RATE = 1.8;       // life lost per second
@@ -42,8 +43,6 @@ addEventListener('keydown', (e) => {
 scene.addEventListener('pointerdown', (e) => {
   e.preventDefault();
   focusTA();
-  $('sheet').classList.remove('show');
-  $('setBtn').classList.remove('on');
 });
 
 const SIDE_MARGIN_PX = 24;
@@ -51,13 +50,21 @@ const TOP_MARGIN_PX = 72;    // clears #bar
 const BOTTOM_MARGIN_PX = 74;
 const METER_GAP_PX = 16;
 const METER_MAX_WIDTH_PX = 340;
+const STATS_BREAKPOINT_PX = 700;  // below this, the dev stats panel is a floating overlay and doesn't reflow the canvas — matches index.html's media query
+const STATS_CANVAS_SHARE = 0.618; // golden-ratio split when the dev stats panel is open on a wide viewport
 
 // sizes/positions #scene to fit the panel's fixed aspect ratio into the
-// viewport (flat canvas — no perspective warp), and lines up #meter below it
+// viewport (flat canvas — no perspective warp), and lines up #meter below it.
+// When the dev stats panel is open on a wide viewport, the canvas only gets
+// the left 61.8% (matches index.html's `left:30.9%` — the midpoint of that
+// zone) instead of the full width, so it's genuinely resized, not just
+// repositioned by CSS.
 function layout() {
   const safeTop = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--safe-t')) || 0;
   const top = safeTop + TOP_MARGIN_PX;
-  const availW = innerWidth - SIDE_MARGIN_PX, availH = innerHeight - top - BOTTOM_MARGIN_PX;
+  const statsOpen = document.body.classList.contains('stats-open') && innerWidth >= STATS_BREAKPOINT_PX;
+  const usableWidth = statsOpen ? innerWidth * STATS_CANVAS_SHARE : innerWidth;
+  const availW = usableWidth - SIDE_MARGIN_PX, availH = innerHeight - top - BOTTOM_MARGIN_PX;
   const scale = Math.min(availW / panel.width, availH / panel.height);
   const displayW = panel.width * scale, displayH = panel.height * scale;
   const sceneTop = top + (innerHeight - top - BOTTOM_MARGIN_PX - displayH) / 2;
@@ -70,6 +77,13 @@ function layout() {
   meterEl.style.top = (sceneTop + displayH + METER_GAP_PX) + 'px';
   meterEl.style.width = Math.min(displayW, METER_MAX_WIDTH_PX) + 'px';
 }
+
+// bundled so the canvas resize and the panel's slide-in/out animate together,
+// not a frame behind waiting on the debounced resize handler below
+$('statsBtn').addEventListener('click', () => {
+  toggleDevPanel();
+  layout();
+});
 
 let resizeTimer = null;
 addEventListener('resize', () => {
@@ -117,6 +131,7 @@ function frame(now) {
     const fillEl = $('fill');
     fillEl.style.width = (store.energy * 100) + '%';
     fillEl.style.background = store.energy > HOT_ENERGY_THRESHOLD ? 'var(--red)' : 'var(--ink)';
+    updateDevPanel();
   }
 
   requestAnimationFrame(frame);

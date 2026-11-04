@@ -68,6 +68,19 @@ export function bindButtons() {
       if (id !== 'setBtn') e.preventDefault();
     });
   }
+
+  // clicking/tapping anywhere outside the settings sheet closes it. The dev
+  // stats panel and its toggle are excluded on purpose: settings and stats
+  // are independent and can both be open at once (see devpanel.js), so
+  // opening/using one must not silently close the other.
+  document.addEventListener('pointerdown', (e) => {
+    const sheet = $('sheet');
+    if (!sheet.classList.contains('show')) return;
+    if (e.target.closest('#sheet') || e.target.closest('#setBtn') ||
+        e.target.closest('#devpanel') || e.target.closest('#statsBtn')) return;
+    sheet.classList.remove('show');
+    $('setBtn').classList.remove('on');
+  });
 }
 
 // shows a message in the toast element, fading it out after a fixed duration
